@@ -23,11 +23,11 @@ class TreeNode:
                self.left.Insert(value)
 
    def PrintTreeDFS(self):
-      if self.left:
+      if self.left:                         #сначала пробегаемся по левой ветке
          self.left.PrintTreeDFS()
-      print( self.data),
+      print( self.data),                    #потом корень
       if self.right:
-         self.right.PrintTreeDFS()
+         self.right.PrintTreeDFS()          #потом пробегаемся по правой ветке
 
    def PrintTreeBFS(self):
       h = self.Height()
@@ -77,24 +77,24 @@ class TreeNode:
       for i in values:
          self.Insert(int(i))
 
-   def VisualizeBinaryTree(self):
+   def VisualizeBinaryTree(self): #метод для отрисовки дерева в консоли
       height = self.Height()
-      nodes = self.GetLevelsDict()
+      nodes = self.GetLevelsDict()          #получаем словарь с элементами
       for level in range(height):
-         firstOffset = (pow(2, height-(level+1))-1)*3
-         print(" "*firstOffset,end="")
-         for i in range(pow(2,level)):
-            if nodes[level][i]:
+         firstOffset = (pow(2, height-(level+1))-1)*3         #рассчитываем первый отступ на уровне
+         print(" "*firstOffset,end="")                        #отрисовываем этот отступ
+         for i in range(pow(2,level)):                        #пробегаем по каждомц элементу на уровне
+            if nodes[level][i]:                               #если элемент есть, то печатаем его
                print(nodes[level][i].data," "*(3-len(str(nodes[level][i].data))),end="")
-            elif nodes[level][i] is None:
+            elif nodes[level][i] is None:                     #если нет, то вместо него ###
                print("###",end="")
 
-            spaceBetweenNodes = (pow(2,height-level)-1)*3
-            print(" "*spaceBetweenNodes,end="")
+            spaceBetweenNodes = (pow(2,height-level)-1)*3     #рассчитываем отступы между элементами на уровне
+            print(" "*spaceBetweenNodes,end="")               #и печатаем этот отступ после каждого элемента
 
-         print("")
+         print("")                                            #делаем переход на следующий уровень
 
-   def GetLevelsDict(self):
+   def GetLevelsDict(self):    #метод для получения словаря с уровнем в качестве ключа и массивом узлов в качестве значения
       nodes = {0:[self]}
       height = self.Height()
       for level in range(1,height):
@@ -127,32 +127,3 @@ print("\nМаксимальный элемент:")
 print(tree.FindMaxElem())
 print("\nВизуализация дерева:")
 tree.VisualizeBinaryTree()
-
-'''
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-WIDTH = 460
-HEIGHT = 480
-FPS = 30
-pygame.init()
-pygame.mixer.init()
-sc = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Визуализация дерева")
-clock = pygame.time.Clock()
-
-running = True
-while running:
-   clock.tick(FPS)
-
-   for event in pygame.event.get():
-      if event.type == pygame.QUIT:
-         running = False
-
-
-   # Рендеринг
-   sc.fill(WHITE)
-
-   pygame.display.flip()
-
-pygame.quit()
-'''
