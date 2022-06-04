@@ -1,3 +1,5 @@
+import pygame
+
 class TreeNode:
    def __init__(self,data):
       self.left = None
@@ -68,34 +70,52 @@ class TreeNode:
          return self.data
       else:
          return self.right.FindMaxElem()
+       
+   def ReadFromFile(self,fileName):
+      file = open(fileName)
+      values = file.read().split(" ")
+      for i in values:
+         self.Insert(int(i))
 
-   def VisualizeTree(self):
+   def VisualizeBinaryTree(self):
       height = self.Height()
+      nodes = self.GetLevelsDict()
       for level in range(height):
-         for i in range(pow(2,(height-1)-level)*3-3):
-            print(" ",end="")
-         self.PrintVisualizedLevel(level)
+         firstOffset = (pow(2, height-(level+1))-1)*3
+         print(" "*firstOffset,end="")
+         for i in range(pow(2,level)):
+            if nodes[level][i]:
+               print(nodes[level][i].data," "*(3-len(str(nodes[level][i].data))),end="")
+            elif nodes[level][i] is None:
+               print("###",end="")
+
+            spaceBetweenNodes = (pow(2,height-level)-1)*3
+            print(" "*spaceBetweenNodes,end="")
+
          print("")
 
-   def PrintVisualizedLevel(self, level):
-      spaceBetweenNodes = pow(2, self.Height() - level)*3 - 1
-      if self is None:
-         return
-      if level == 0:
-         print(self.data," "*spaceBetweenNodes, end="")
-      elif level > 0:
-         if self.left:
-            self.left.PrintVisualizedLevel(level - 1)
-         if self.right:
-            self.right.PrintVisualizedLevel(level - 1)
+   def GetLevelsDict(self):
+      nodes = {0:[self]}
+      height = self.Height()
+      for level in range(1,height):
+         nodes[level]=[]
+         for i in range(pow(2,level-1)):
+            if nodes[level-1][i] is None:
+               nodes[level].append(None)
+               nodes[level].append(None)
+            else:
+               if nodes[level-1][i].left:
+                  nodes[level].append(nodes[level-1][i].left)
+               elif nodes[level-1][i].left is None:
+                  nodes[level].append(None)
+               if nodes[level - 1][i].right:
+                  nodes[level].append(nodes[level - 1][i].right)
+               elif nodes[level - 1][i].right is None:
+                  nodes[level].append(None)
 
-
+      return nodes
 tree = TreeNode(5)
-tree.Insert(5)
-tree.Insert(4)
-tree.Insert(-1)
-tree.Insert(-2)
-tree.Insert(7)
+tree.ReadFromFile("task.txt")
 print("\nОбход в глубину:")
 tree.PrintTreeDFS()
 print(" ")
@@ -106,4 +126,33 @@ print(tree.FindMinElem())
 print("\nМаксимальный элемент:")
 print(tree.FindMaxElem())
 print("\nВизуализация дерева:")
-tree.VisualizeTree()
+tree.VisualizeBinaryTree()
+
+'''
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+WIDTH = 460
+HEIGHT = 480
+FPS = 30
+pygame.init()
+pygame.mixer.init()
+sc = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Визуализация дерева")
+clock = pygame.time.Clock()
+
+running = True
+while running:
+   clock.tick(FPS)
+
+   for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+         running = False
+
+
+   # Рендеринг
+   sc.fill(WHITE)
+
+   pygame.display.flip()
+
+pygame.quit()
+'''
