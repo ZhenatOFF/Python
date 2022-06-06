@@ -22,6 +22,27 @@ class TreeNode:
             else:
                self.left.Insert(value)
 
+   def IterativeInsert(self, value):
+      newNode = TreeNode(value)
+      x = self
+      y = None #нужен для трейлинга
+
+      while x!=None:
+         y=x
+         if value<x.data:
+            x = x.left
+         else:
+            x = x.right
+
+      if y is None:
+         y=newNode
+      elif value<y.data:
+         y.left = newNode
+      else:
+         y.right = newNode
+
+
+
    def PrintTreeDFS(self):
       if self.left:                         #сначала пробегаемся по левой ветке
          self.left.PrintTreeDFS()
@@ -33,6 +54,7 @@ class TreeNode:
       h = self.Height()
       for i in range(h):
          self.PrintLevel(i)
+         print("")
 
    def Height(self):
       if self is None:
@@ -52,7 +74,7 @@ class TreeNode:
       if self is None:
          return
       if level == 0:
-         print(self.data)
+         print(self.data," ", end="")
       elif level > 0:
          if self.left:
             self.left.PrintLevel(level - 1)
@@ -70,12 +92,12 @@ class TreeNode:
          return self.data
       else:
          return self.right.FindMaxElem()
-       
+
    def ReadFromFile(self,fileName):
       file = open(fileName)
       values = file.read().split(" ")
       for i in values:
-         self.Insert(int(i))
+         self.IterativeInsert(int(i))
 
    def VisualizeBinaryTree(self): #метод для отрисовки дерева в консоли
       height = self.Height()
@@ -114,11 +136,15 @@ class TreeNode:
                   nodes[level].append(None)
 
       return nodes
+
+
 tree = TreeNode(5)
 tree.ReadFromFile("task.txt")
+tree.IterativeInsert(30)
 print("\nОбход в глубину:")
 tree.PrintTreeDFS()
 print(" ")
+tree.PrintLevel(2)
 print("\nОбход в ширину:")
 tree.PrintTreeBFS()
 print("\nМинимальный элемент:")
